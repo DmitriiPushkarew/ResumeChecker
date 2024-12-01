@@ -48,11 +48,13 @@ public class ResumeNavigatorService {
                         driver.get(resumeUrl);
                         Thread.sleep(3000); // Задержка 3 секунды
 
+                        boolean goodExperience = validationService.validateExperience(driver);
                         boolean hasRecentViews = validationService.hasRecentViews(driver);
-                        if (hasRecentViews) {
-                            System.out.println("Смотрели.");
+
+                        if (hasRecentViews || !goodExperience) {
+                            System.out.println("Не соответствует");
                         } else {
-                            System.out.println("Не смотрели.");
+                            System.out.println("соответствует.");
                             ensureOutputDirectoryExists(outputFilePath);
                             saveToFile(resumeUrl, outputFilePath); // Сохранение URL в файл
                         }

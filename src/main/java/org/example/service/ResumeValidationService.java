@@ -3,6 +3,7 @@ package org.example.service;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -14,6 +15,13 @@ import java.util.List;
 public class ResumeValidationService {
 
     private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yy HH:mm");
+
+    private final ExperienceValidationService experienceValidationService;
+
+    public ResumeValidationService(ExperienceValidationService experienceValidationService) {
+        this.experienceValidationService = experienceValidationService;
+    }
+
 
     public boolean hasRecentViews(WebDriver driver) {
         try {
@@ -42,4 +50,16 @@ public class ResumeValidationService {
 
         return false;
     }
-}
+
+
+
+    public boolean validateExperience(WebDriver driver) {
+        boolean hasRequiredExperience = experienceValidationService.hasRequiredNecessaryExperience(driver);
+        if (hasRequiredExperience) {
+            System.out.println("Кандидат имеет достаточный опыт с Java и Spring.");
+        } else {
+            System.out.println("Кандидат не имеет достаточного опыта с Java и Spring.");
+        }
+
+        return hasRequiredExperience;
+    }}
