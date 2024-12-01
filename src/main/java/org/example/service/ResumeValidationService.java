@@ -9,7 +9,9 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @Service
 public class ResumeValidationService {
@@ -27,30 +29,36 @@ public class ResumeValidationService {
         try {
             // Найти секцию "Последние просмотры за 3 месяца"
             WebElement section = driver.findElement(By.cssSelector("div.resume-sidebar-section_noprint"));
-            List<WebElement> dates = section.findElements(By.cssSelector("div.resume-sidebar-item span"));
 
+            // Предполагаем, что последняя дата всегда первая или последняя в списке
+            WebElement lastDateElement = section.findElement(By.cssSelector("div.resume-sidebar-item span:last-of-type"));
+
+            String dateText = lastDateElement.getText();
             LocalDate currentDate = LocalDate.now();
 
-            for (WebElement dateElement : dates) {
-                String dateText = dateElement.getText();
-                LocalDateTime viewDateTime = LocalDateTime.parse(dateText, DATE_TIME_FORMATTER);
+            try {
+                LocalDate lastViewDate = LocalDate.parse(dateText, DATE_TIME_FORMATTER);
 
-                // Преобразуем LocalDateTime в LocalDate, чтобы сравнивать только по дате
-                LocalDate viewDate = viewDateTime.toLocalDate();
-
-                // Если дата просмотра позже, чем 10 дней назад, возвращаем true
-                if (!viewDate.isBefore(currentDate.minusDays(10))) {
+                boolean result =!lastViewDate.isBefore(currentDate.minusDays(10));;
+                if(result) {
+                    System.out.println("Смотрели недавно");
                     return true;
+                }else{
+                    return false;
                 }
+            } catch (DateTimeParseException e) {
+                System.err.println("Неверный формат даты: " + dateText);
             }
+
+        } catch (NoSuchElementException e) {
+            System.err.println("Секция 'Последние просмотры' или дата не найдена: " + e.getMessage());
         } catch (Exception e) {
-            System.err.println("Ошибка при проверке даты последних просмотров: " + e.getMessage());
+            System.err.println("Неизвестная ошибка: " + e.getMessage());
             e.printStackTrace();
         }
 
         return false;
     }
-
 
 
     public boolean validateExperience(WebDriver driver) {

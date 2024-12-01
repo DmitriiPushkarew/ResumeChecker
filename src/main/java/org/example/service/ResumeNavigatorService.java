@@ -48,10 +48,8 @@ public class ResumeNavigatorService {
                         driver.get(resumeUrl);
                         Thread.sleep(3000); // Задержка 3 секунды
 
-                        boolean goodExperience = validationService.validateExperience(driver);
-                        boolean hasRecentViews = validationService.hasRecentViews(driver);
-
-                        if (hasRecentViews || !goodExperience) {
+                        if (validationService.hasRecentViews(driver)
+                                || !validationService.validateExperience(driver)) {
                             System.out.println("Не соответствует");
                         } else {
                             System.out.println("соответствует.");
