@@ -1,0 +1,8 @@
+resume:
+  file-path: "classpath:files/java-irina_candidates_links.txt"
+
+browser:
+  profile-path: "C:\\Users\\Dmitrii\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles\\9z6qt0wc.default-release" # Укажите путь к профилю браузера
+
+selenium:
+  geckodriver-path: "D:/geckodriver-v0.35.0-win64/geckodriver.exe"
