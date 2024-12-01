@@ -28,6 +28,13 @@ public class ResumeNavigatorService {
     @Value("${selenium.geckodriver-path}")
     private String geckoDriverPath;
 
+    @Autowired
+    private ResumeValidationService validationService;
+
+
+    @Value("${resume.output-file-path}")
+    private String outputFilePath; // Путь к файлу для сохранения
+
     public void navigateThroughResumes() {
         initializeDriver();
 
@@ -40,6 +47,15 @@ public class ResumeNavigatorService {
                         System.out.println("Переход на резюме: " + resumeUrl);
                         driver.get(resumeUrl);
                         Thread.sleep(3000); // Задержка 3 секунды
+
+                        boolean hasRecentViews = validationService.hasRecentViews(driver);
+                        if (hasRecentViews) {
+                            System.out.println("Смотрели.");
+                        } else {
+                            System.out.println("Не смотрели.");
+                            ensureOutputDirectoryExists(outputFilePath);
+                            saveToFile(resumeUrl, outputFilePath); // Сохранение URL в файл
+                        }
                     }
                 }
             }
@@ -50,6 +66,7 @@ public class ResumeNavigatorService {
             closeDriver();
         }
     }
+
 
 
     private void initializeDriver() {
@@ -74,6 +91,22 @@ public class ResumeNavigatorService {
             } catch (Exception e) {
                 System.err.println("Ошибка при закрытии браузера: " + e.getMessage());
             }
+        }
+    }
+
+    private void saveToFile(String content, String outputPath) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputPath, true))) {
+            writer.write(content);
+            writer.newLine();
+        } catch (IOException e) {
+            System.err.println("Ошибка при записи в файл: " + e.getMessage());
+        }
+    }
+
+    private void ensureOutputDirectoryExists(String outputPath) {
+        File file = new File(outputPath).getParentFile();
+        if (file != null && !file.exists()) {
+            file.mkdirs();
         }
     }
 }
