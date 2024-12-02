@@ -1,6 +1,6 @@
 resume:
-  file-path: "classpath:files/java-irina_candidates_links.txt"
-  output-file-path: "output/java-irina-resumes_to_review.txt"
+  file-path: "classpath:files/qa-manual_candidates_links.txt"
+  output-file-path: "output/qa-manual-resumes_to_review.txt"
 
 browser:
   profile-path: "C:\\Users\\Dmitrii\\AppData\\Roaming\\Mozilla\\Firefox\\Profiles\\9z6qt0wc.default-release" # Укажите путь к профилю браузера
