@@ -144,4 +144,61 @@ public class  ExperienceValidationService {
         return text.matches(".*(год|года|лет|месяц|месяца|месяцев).*");
     }
 
+    public boolean isReliableEmployee(WebDriver driver) {
+        try {
+            // Найти все блоки опыта работы
+            List<WebElement> experienceBlocks = driver.findElements(By.cssSelector("div.bloko-columns-row"));
+
+            int totalMonths = 0;
+            int jobCount = 0;
+
+            // Хранилище обработанных описаний для предотвращения дублирования
+            Set<String> processedJobDescriptions = new HashSet<>();
+
+            for (WebElement block : experienceBlocks) {
+                try {
+                    // Попытка найти описание опыта работы
+                    WebElement descriptionElement = block.findElement(By.cssSelector("div[data-qa='resume-block-experience-description']"));
+                    String descriptionText = descriptionElement.getText().toLowerCase();
+
+                    // Если описание уже обработано, пропускаем этот блок
+                    if (processedJobDescriptions.contains(descriptionText)) {
+                        continue;
+                    }
+
+                    // Добавляем новое описание в хранилище обработанных
+                    processedJobDescriptions.add(descriptionText);
+
+                    // Извлекаем стаж для уникального блока
+                    int months = extractExperienceFromBlock(block);
+                    if (months > 0) {
+                        totalMonths += months; // Суммируем месяцы
+                        jobCount++; // Увеличиваем количество мест работы
+                    }
+                } catch (Exception e) {
+                    System.err.println("Ошибка при обработке блока опыта работы: " + e.getMessage());
+                }
+            }
+
+            if (jobCount == 0) {
+                // Если нет мест работы, нельзя определить надёжность
+                System.err.println("Ошибка: не найдено ни одного уникального места работы.");
+                return false;
+            }
+
+            // Рассчитываем среднюю продолжительность работы на одном месте
+            int averageMonthsPerJob = totalMonths / jobCount;
+
+            // Логируем результат
+            System.out.println("Средняя продолжительность работы: " + averageMonthsPerJob + " месяцев.");
+
+            // Возвращаем true, если средняя продолжительность >= 12 месяцев, иначе false
+            return averageMonthsPerJob >= 12;
+
+        } catch (Exception e) {
+            System.err.println("Ошибка при проверке надёжности сотрудника: " + e.getMessage());
+            return false;
+        }
+    }
+
 }

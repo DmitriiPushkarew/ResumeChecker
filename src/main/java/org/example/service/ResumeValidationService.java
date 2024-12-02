@@ -60,6 +60,15 @@ public class ResumeValidationService {
         return false;
     }
 
+    public boolean longExperience(WebDriver driver) {
+        boolean isLongExperience = experienceValidationService.isReliableEmployee(driver);
+        if(isLongExperience) {
+            System.out.println("Хороший сотрудник");
+        }else{
+            System.out.println("Бегунок");
+        }
+        return isLongExperience;
+    }
 
     public boolean validateExperience(WebDriver driver) {
         boolean hasRequiredExperience = experienceValidationService.hasRequiredNecessaryExperience(driver);

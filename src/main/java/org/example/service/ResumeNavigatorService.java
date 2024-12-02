@@ -46,15 +46,15 @@ public class ResumeNavigatorService {
                     if (!resumeUrl.isBlank()) {
                         System.out.println("Переход на резюме: " + resumeUrl);
                         driver.get(resumeUrl);
-                        Thread.sleep(3000); // Задержка 3 секунды
-
-                        if (validationService.hasRecentViews(driver)
-                                || !validationService.validateExperience(driver)) {
+                        Thread.sleep(2000);
+                        if ( validationService.hasRecentViews(driver)
+                                || !validationService.validateExperience(driver)
+                                || validationService.longExperience(driver)) {
                             System.out.println("Не соответствует");
                         } else {
                             System.out.println("соответствует.");
                             ensureOutputDirectoryExists(outputFilePath);
-                            saveToFile(resumeUrl, outputFilePath); // Сохранение URL в файл
+                            saveToFile(resumeUrl, outputFilePath);
                         }
                     }
                 }
