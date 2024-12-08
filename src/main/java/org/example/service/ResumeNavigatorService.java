@@ -49,7 +49,7 @@ public class ResumeNavigatorService {
                         Thread.sleep(2000);
                         if ( validationService.hasRecentViews(driver)
                                 || !validationService.validateExperience(driver)
-                                || validationService.longExperience(driver)) {
+                                || !validationService.longExperience(driver)) {
                             System.out.println("Не соответствует");
                         } else {
                             System.out.println("соответствует.");

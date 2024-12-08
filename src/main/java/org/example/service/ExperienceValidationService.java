@@ -58,7 +58,7 @@ public class  ExperienceValidationService {
             String descriptionText = descriptionElement.getText().toLowerCase();
 
             // Проверить, содержит ли описание слово "Java"
-            if (descriptionText.contains("java") && descriptionText.contains("spring")) {
+            if (descriptionText.contains("")) {
                 // Если текст уже обработан, вернуть false
                 if (processedDescriptions.contains(descriptionText)) {
                     return false;

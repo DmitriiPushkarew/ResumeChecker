@@ -1,5 +1,5 @@
 resume:
-  file-path: "classpath:files/automatic_candidates_links.txt"
+  file-path: "classpath:files/qa-automatic_candidates_links.txt"
   output-file-path: "output/automatic-resumes_to_review.txt"
 
 browser:
